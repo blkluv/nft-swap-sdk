@@ -9,7 +9,7 @@ import warning from 'tiny-warning';
 import {
   buildOrder as _buildOrder,
   signOrder as _signOrder,
-  sendSignedOrderToEthereum as _sendSignedOrderToEthereum,
+  fillOrder as _fillOrder,
   approveAsset as _approveAsset,
   verifyOrderSignature as _verifyOrderSignature,
   getApprovalStatus as _getApprovalStatus,
@@ -42,13 +42,14 @@ import {
   TypedData,
   AddressesForChain,
 } from './types';
-import { ExchangeContract, ExchangeContract__factory } from '../contracts';
+import { ExchangeContract, ExchangeContract__factory, Forwarder__factory } from '../contracts';
 import {
   convertAssetsToInternalFormat,
   convertAssetToInternalFormat,
 } from '../utils/asset-data';
 import { sleep } from '../utils/sleep';
 import addresses from '../addresses.json';
+import { ZERO_AMOUNT } from '../utils/eth';
 
 export interface NftSwapConfig {
   exchangeContractAddress?: string;
@@ -132,6 +133,7 @@ export interface ApprovalOverrides {
 export interface FillOrderOverrides {
   signer: Signer;
   exchangeContract: ExchangeContract;
+  buyWithNativeTokenInsteadOfWrappedToken: boolean;
 }
 
 /**
@@ -214,6 +216,11 @@ class NftSwap implements INftSwap {
       zeroExExchangeContractAddress,
       signer ?? provider
     );
+
+    const forwarderContract = Forwarder__factory.connect(
+      this.forwarderContractAddress,
+      signer ?? provider,
+    )
   }
 
   public cancelOrder = async (order: Order) => {
@@ -396,12 +403,27 @@ class NftSwap implements INftSwap {
     };
   };
 
+  public canBuyOrderWithEth = (order: Order) => {
+
+  }
+
+  public canSellOrderWithEth = (order: Order) => {
+
+  }
+
   public fillSignedOrder = async (
     signedOrder: SignedOrder,
     fillOverrides?: Partial<FillOrderOverrides>,
     transactionOverrides: Partial<PayableOverrides> = {}
   ) => {
-    return _sendSignedOrderToEthereum(
+    if (fillOverrides?.buyWithNativeTokenInsteadOfWrappedToken) {
+      const forwarderContract = Forwarder__factory.connect(
+        this.forwarderContractAddress!,
+        this.signer ?? this.provider,
+      )
+      return forwarderContract.marketBuyOrdersWithEth([signedOrder], 1, [signedOrder.signature], [], [], transactionOverrides)
+    }
+    return _fillOrder(
       signedOrder,
       fillOverrides?.exchangeContract ?? this.exchangeContract,
       transactionOverrides

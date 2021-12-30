@@ -31,6 +31,7 @@ import {
   ERC20__factory,
   ERC721__factory,
   ExchangeContract,
+  Forwarder,
 } from '../contracts';
 import { UnexpectedAssetTypeError, UnsupportedChainId } from './error';
 import {
@@ -360,10 +361,10 @@ export interface PayableOverrides extends TransactionOverrides {
   value?: BigNumberish | Promise<BigNumberish>;
 }
 
-export const sendSignedOrderToEthereum = async (
+export const fillOrder = async (
   signedOrder: SignedOrder,
   exchangeContract: ExchangeContract,
-  overrides?: PayableOverrides
+  overrides?: PayableOverrides,
 ): Promise<ContractTransaction> => {
   // const gas = await exchangeContract.estimateGas.fillOrder(
   //   normalizeOrder(signedOrder),
@@ -375,6 +376,9 @@ export const sendSignedOrderToEthereum = async (
   //   overrides
   // )
   // console.log('sendSignedOrderToEthereum:gas', gas.toString())
+
+  const ethForFill = overrides?.value
+
   return exchangeContract.fillOrKillOrder(
     normalizeOrder(signedOrder),
     signedOrder.takerAssetAmount,
@@ -382,6 +386,10 @@ export const sendSignedOrderToEthereum = async (
     overrides
   );
 };
+
+export const fillOrderWithEth = async () => {
+  
+}
 
 /**
  * Approval status of an ERC20, ERC721, or ERC1155 asset/item.
