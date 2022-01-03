@@ -1567,6 +1567,26 @@
     "@size-limit/esbuild" "7.0.3"
     "@size-limit/file" "7.0.3"
 
+"@traderxyz/nft-swap-sdk@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@traderxyz/nft-swap-sdk/-/nft-swap-sdk-0.7.0.tgz#657f87221fef05bdf346ed519917a3c0b8424561"
+  integrity sha512-gmfSo2mO32NoxOQ8VYsKRzMLnSPFC9kKk5AYvW2lYiEjfU2mQV4570cIQ229d9utWq5a4SoNT6QxXbBW+e/UDw==
+  dependencies:
+    "@ethersproject/abi" "^5.5.0"
+    "@ethersproject/abstract-signer" "^5.5.0"
+    "@ethersproject/bignumber" "^5.5.0"
+    "@ethersproject/bytes" "^5.5.0"
+    "@ethersproject/hash" "^5.5.0"
+    "@ethersproject/providers" "^5.5.1"
+    "@ethersproject/wallet" "^5.5.0"
+    date-fns "^2.27.0"
+    ethers "^5.5.2"
+    from-exponential "^1.1.1"
+    lodash "^4.17.21"
+    lodash-es "^4.17.21"
+    tiny-invariant "^1.2.0"
+    tiny-warning "^1.0.3"
+
 "@typechain/ethers-v5@^8.0.5":
   version "8.0.5"
   resolved "https://registry.yarnpkg.com/@typechain/ethers-v5/-/ethers-v5-8.0.5.tgz#d469420e9a73deb7fa076cde9edb45d713dd1b8c"
