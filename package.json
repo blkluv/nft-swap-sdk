@@ -22,7 +22,6 @@
     "generate-types": "typechain --out-dir 'src/contracts' --target=ethers-v5 'src/abis/**/*.json'",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
